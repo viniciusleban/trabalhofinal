@@ -15,6 +15,7 @@ fornecer os dados ao módulo de Faturamento.
 - Back-end: Node.js + Express
 - Front-end: React + Vite
 - Banco de dados: PostgreSQL
+- Autenticação: JWT
 
 ## Integrações
 
