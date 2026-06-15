@@ -44,8 +44,9 @@ function normalizarReceita(dados) {
 export async function buscarReceita(idReceita) {
   const token = await autenticar();
 
-  const resposta = await fetch(`${BASE_URL}/receitas/${idReceita}`, {
-    headers: { Authorization: `Bearer ${token}` }
+  const resposta = await fetch(`${BASE_URL}/receita/validar/${idReceita}`, {
+    method: 'GET',
+    headers: { 'token': token } // G6 pediu header 'token' ao invés de 'Authorization'
   });
 
   if (resposta.status === 404) {
@@ -57,13 +58,23 @@ export async function buscarReceita(idReceita) {
   }
 
   const dados = await resposta.json();
-  return normalizarReceita(dados);
+
+  if (dados.valida === false) {
+    return { invalidaG6: true, motivo: dados.motivo };
+  }
+
+  return normalizarReceita(dados.receita);
 }
 
 export function receitaEhValida(receita) {
   if (!receita) {
     return { valida: false, motivo: 'Receita nao encontrada' };
   }
+  
+  if (receita.invalidaG6) {
+    return { valida: false, motivo: receita.motivo };
+  }
+
   if (receita.status && String(receita.status).toLowerCase() === 'dispensada') {
     return { valida: false, motivo: 'Receita ja dispensada' };
   }
@@ -79,13 +90,12 @@ export function receitaEhValida(receita) {
 export async function marcarReceitaDispensada(idReceita) {
   const token = await autenticar();
 
-  const resposta = await fetch(`${BASE_URL}/receitas/${idReceita}/status`, {
-    method: 'PATCH',
+  const resposta = await fetch(`${BASE_URL}/receita/dispensar/${idReceita}`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({ status: 'dispensada' })
+      'token': token
+    }
   });
 
   if (!resposta.ok) {

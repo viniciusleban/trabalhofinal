@@ -13,6 +13,21 @@ export default function Dispensar() {
 
   useEffect(() => {
     api.listarMedicamentos().then(setMedicamentos).catch(() => {});
+
+    async function checarReceitas() {
+      try {
+        const resposta = await api.listarReceitas();
+
+        if (!resposta || resposta.length === 0) {
+          setErro('Nenhuma receita pendente encontrada no módulo de receitas.');
+        } 
+
+      } catch (e) {
+        setErro('Não foi possível buscar a lista de receitas no módulo de receitas (G6).');
+      }
+    }
+
+    checarReceitas();
   }, []);
 
   async function validar() {
@@ -20,12 +35,31 @@ export default function Dispensar() {
     setSucesso('');
     setReceita(null);
     setValidando(true);
+    
     try {
       const resp = await api.validarReceita(idReceita);
+
+      if (!resp || !resp.receita) {
+        setErro('Nenhuma receita encontrada com o ID informado no módulo de receitas (G6).');
+        return;
+      }
+      
       setReceita(resp.receita);
       setItens([{ idMedicamento: '', quantidade: 1, dosagem: '' }]);
     } catch (e) {
-      setErro(e.message);
+      console.error("Erro na validação:", e);
+
+      if (e.response) {
+        if (e.response.status === 404) {
+          setErro('Receita não encontrada no sistema. Verifique o ID informado.');
+        } else if (e.response.status === 500) {
+          setErro('O módulo de receitas (G6) encontrou um erro interno. Tente novamente.');
+        } else {
+          setErro(e.response.data?.message || 'Erro ao validar a receita com o módulo externo.');
+        }
+      } else {
+        setErro('Não foi possível conectar ao módulo de receitas (G6).');
+      }
     } finally {
       setValidando(false);
     }

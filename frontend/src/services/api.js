@@ -7,23 +7,28 @@ function getToken() {
 async function request(caminho, opcoes = {}) {
   const headers = { 'Content-Type': 'application/json', ...opcoes.headers };
   const token = getToken();
+  const deveRedirecionarAoReceber401 = Boolean(token);
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
 
   const resposta = await fetch(`${API_URL}${caminho}`, { ...opcoes, headers });
 
-  if (resposta.status === 401) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    window.location.href = '/login';
-    throw new Error('Sessao expirada');
-  }
-
   const dados = await resposta.json().catch(() => ({}));
 
+  if (resposta.status === 401) {
+    if (deveRedirecionarAoReceber401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/login';
+      throw new Error('Sessão expirada');
+    }
+
+    throw new Error(dados.erro || 'Credenciais inválidas');
+  }
+
   if (!resposta.ok) {
-    throw new Error(dados.erro || 'Erro na requisicao');
+    throw new Error(dados.erro || 'Erro na requisição');
   }
 
   return dados;
@@ -49,4 +54,8 @@ export const api = {
   },
 
   detalharDispensacao: (id) => request(`/dispensacoes/${id}`)
+};
+
+export const listarReceitas = async () => {
+  return []; 
 };

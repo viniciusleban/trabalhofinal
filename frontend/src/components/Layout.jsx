@@ -38,7 +38,7 @@ export default function Layout({ children }) {
 
         <nav style={{ flex: 1 }}>
           <NavLink to="/dispensar" style={linkEstilo}>Nova dispensação</NavLink>
-          <NavLink to="/historico" style={linkEstilo}>Histórico</NavLink>
+          <NavLink to="/historico" style={linkEstilo}>Histórico de Dispensações</NavLink>
           <NavLink to="/medicamentos" style={linkEstilo}>Medicamentos</NavLink>
         </nav>
 
