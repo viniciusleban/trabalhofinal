@@ -28,7 +28,7 @@ CREATE TABLE usuario (
 
 CREATE TABLE dispensacao (
     id_dispensacao    SERIAL PRIMARY KEY,
-    id_receita_externa INTEGER NOT NULL,
+    id_receita_externa VARCHAR(50) NOT NULL,
     id_paciente_externo INTEGER NOT NULL,
     id_usuario        INTEGER NOT NULL,
     data_dispensacao  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
