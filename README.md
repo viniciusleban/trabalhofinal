@@ -63,7 +63,7 @@ npm install
 npm run dev
 ```
 
-A API sobe em `http://localhost:3008`.
+A API sobe em `http://localhost:3001`.
 
 ### 3. Front-end
 
@@ -75,6 +75,18 @@ npm run dev
 ```
 
 A interface sobe em `http://localhost:5173`.
+
+## Documentação da API
+
+A documentação dos endpoints está disponível na seção [Endpoints principais](#endpoints-principais) abaixo.
+
+Todas as rotas, exceto `/api/login`, exigem o cabeçalho:
+
+```
+Authorization: Bearer <token>
+```
+
+O token é obtido via `POST /api/login` e expira em 8 horas.
 
 ## Endpoints principais
 
@@ -89,13 +101,17 @@ A interface sobe em `http://localhost:5173`.
 | GET | /api/medicamentos | Lista medicamentos |
 | POST | /api/medicamentos | Cadastra medicamento |
 
-Todas as rotas, exceto `/login` e criação de usuário, exigem o cabeçalho
-`Authorization: Bearer <token>`.
-
 ## Observação sobre a integração com o G6
 
-O cliente do G6 (`backend/src/services/g6Service.js`) tenta autenticar via
-`POST /login` e buscar a receita via `GET /receitas/:id`. Como o formato exato
-do JSON pode variar, a função `normalizarReceita` mapeia os nomes de campo mais
-prováveis (id, pacienteId, status). Ao testar com o G6 real, confira o JSON que
-ele devolve e ajuste o mapeamento nesse único ponto, se necessário.
+O cliente do G6 (`backend/src/services/g6Service.js`) autentica via `POST /login`
+e busca a receita via `GET /receita/validar/:id`. Após a dispensação, notifica o G6
+via `POST /receita/dispensar/:id`. Caso o módulo G6 esteja indisponível, o sistema
+retorna HTTP 503 com mensagem clara ao usuário.
+
+## Contatos
+
+| Nome | E-mail |
+|------|--------|
+| Vinicius Leban | vinicius.leban@unoesc.edu.br |
+| Pedro Tormem | gabrielsartori2928@gmail.com |
+| Gabriel Sartori | pedrotormem29@gmail.com |
