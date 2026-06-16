@@ -195,3 +195,13 @@ export async function marcarFaturado(req, res) {
 
   return res.json(resultado.rows[0]);
 }
+
+export async function listarReceitasG6(req, res) {
+  try {
+    const { buscarTodasReceitas } = await import('../services/g6Service.js');
+    const receitas = await buscarTodasReceitas();
+    return res.json(receitas);
+  } catch (e) {
+    return res.status(503).json({ erro: 'Modulo G6 indisponivel.' });
+  }
+}

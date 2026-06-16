@@ -53,9 +53,7 @@ export const api = {
     return request(`/dispensacoes${params ? `?${params}` : ''}`);
   },
 
-  detalharDispensacao: (id) => request(`/dispensacoes/${id}`)
-};
+  listarReceitasG6: () => request('/receitas'),
 
-export const listarReceitas = async () => {
-  return []; 
+  detalharDispensacao: (id) => request(`/dispensacoes/${id}`)
 };

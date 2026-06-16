@@ -15,6 +15,7 @@ router.post('/medicamentos', autenticarToken, exigirPapel('farmaceutico', 'admin
 router.patch('/medicamentos/:id/estoque', autenticarToken, exigirPapel('farmaceutico', 'admin'), medicamento.atualizarEstoque);
 
 router.get('/receitas/:idReceita/validar', autenticarToken, dispensacao.validarReceita);
+router.get('/receitas', autenticarToken, dispensacao.listarReceitasG6);
 
 router.post('/dispensacoes', autenticarToken, exigirPapel('farmaceutico', 'admin'), dispensacao.registrarDispensacao);
 router.get('/dispensacoes', autenticarToken, dispensacao.listarDispensacoes);
