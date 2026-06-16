@@ -54,6 +54,12 @@ export const api = {
   },
 
   listarReceitasG6: () => request('/receitas'),
+  
+  atualizarMedicamento: (id, dados) =>
+  request(`/medicamentos/${id}`, { method: 'PATCH', body: JSON.stringify(dados) }),
+
+  excluirMedicamento: (id) =>
+    request(`/medicamentos/${id}`, { method: 'DELETE' }),
 
   detalharDispensacao: (id) => request(`/dispensacoes/${id}`)
 };

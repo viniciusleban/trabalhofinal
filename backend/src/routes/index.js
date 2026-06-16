@@ -22,4 +22,7 @@ router.get('/dispensacoes', autenticarToken, dispensacao.listarDispensacoes);
 router.get('/dispensacoes/:id', autenticarToken, dispensacao.detalharDispensacao);
 router.patch('/dispensacoes/:id/faturar', autenticarToken, dispensacao.marcarFaturado);
 
+router.patch('/medicamentos/:id', autenticarToken, exigirPapel('farmaceutico', 'admin'), medicamento.atualizar);
+router.delete('/medicamentos/:id', autenticarToken, exigirPapel('farmaceutico', 'admin'), medicamento.excluir);
+
 export default router;

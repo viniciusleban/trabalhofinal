@@ -67,3 +67,31 @@ export async function atualizarEstoque(req, res) {
 
   return res.json(resultado.rows[0]);
 }
+
+export async function atualizar(req, res) {
+  const { id } = req.params;
+  const { nomeComercial, principioAtivo, formaFarmaceutica, concentracao, unidadeMedida, precoUnitario, estoqueAtual } = req.body;
+  try {
+    const result = await query(
+      `UPDATE medicamento SET nome_comercial=$1, principio_ativo=$2, forma_farmaceutica=$3,
+       concentracao=$4, unidade_medida=$5, preco_unitario=$6, estoque_atual=$7
+       WHERE id_medicamento=$8 RETURNING *`,
+      [nomeComercial, principioAtivo, formaFarmaceutica, concentracao, unidadeMedida, precoUnitario, estoqueAtual, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ erro: 'Medicamento não encontrado' });
+    return res.json(result.rows[0]);
+  } catch (e) {
+    return res.status(500).json({ erro: 'Erro ao atualizar medicamento' });
+  }
+}
+
+export async function excluir(req, res) {
+  const { id } = req.params;
+  try {
+    const result = await query('DELETE FROM medicamento WHERE id_medicamento=$1 RETURNING *', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ erro: 'Medicamento não encontrado' });
+    return res.json({ mensagem: 'Medicamento excluído com sucesso' });
+  } catch (e) {
+    return res.status(500).json({ erro: 'Erro ao excluir medicamento' });
+  }
+}

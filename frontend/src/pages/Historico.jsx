@@ -61,7 +61,7 @@ export default function Historico() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Receita</th>
+                <th>Receita (UUID)</th>
                 <th>Paciente</th>
                 <th>Data</th>
                 <th>Valor</th>
